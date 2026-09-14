@@ -1,12 +1,15 @@
 @UserManagementAPI_HostAddress = https://localhost:7268
+@UserManagementAPI_Token = techhive-development-token
 
 GET {{UserManagementAPI_HostAddress}}/api/users
 Accept: application/json
+Authorization: Bearer {{UserManagementAPI_Token}}
 
 ###
 
 POST {{UserManagementAPI_HostAddress}}/api/users
 Content-Type: application/json
+Authorization: Bearer {{UserManagementAPI_Token}}
 
 {
   "name": "Ada Lovelace",
@@ -17,11 +20,13 @@ Content-Type: application/json
 
 GET {{UserManagementAPI_HostAddress}}/api/users/1
 Accept: application/json
+Authorization: Bearer {{UserManagementAPI_Token}}
 
 ###
 
 PUT {{UserManagementAPI_HostAddress}}/api/users/1
 Content-Type: application/json
+Authorization: Bearer {{UserManagementAPI_Token}}
 
 {
   "name": "Ada Byron Lovelace",
@@ -31,12 +36,14 @@ Content-Type: application/json
 ###
 
 DELETE {{UserManagementAPI_HostAddress}}/api/users/1
+Authorization: Bearer {{UserManagementAPI_Token}}
 
 ###
 
 # Validation: expected 400 Bad Request
 POST {{UserManagementAPI_HostAddress}}/api/users
 Content-Type: application/json
+Authorization: Bearer {{UserManagementAPI_Token}}
 
 {
   "name": " ",
@@ -48,14 +55,30 @@ Content-Type: application/json
 # Missing user: expected 404 Not Found
 GET {{UserManagementAPI_HostAddress}}/api/users/999999
 Accept: application/json
+Authorization: Bearer {{UserManagementAPI_Token}}
 
 ###
 
 # Duplicate email: expected 409 Conflict after creating the first user
 POST {{UserManagementAPI_HostAddress}}/api/users
 Content-Type: application/json
+Authorization: Bearer {{UserManagementAPI_Token}}
 
 {
   "name": "Duplicate User",
   "email": "ada.lovelace@techhive.example"
 }
+
+###
+
+# Authentication: expected 401 Unauthorized
+GET {{UserManagementAPI_HostAddress}}/api/users
+Accept: application/json
+Authorization: Bearer invalid-token
+
+###
+
+# Error handling (Development only): expected 500 with {"error":"Internal server error."}
+GET {{UserManagementAPI_HostAddress}}/api/debug/throw
+Accept: application/json
+Authorization: Bearer {{UserManagementAPI_Token}}

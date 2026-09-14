@@ -1,10 +1,10 @@
 using System.Collections.Concurrent;
 using System.ComponentModel.DataAnnotations;
+using UserManagementAPI.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
-builder.Services.AddProblemDetails();
 builder.Services.AddSingleton<UserStore>();
 
 var app = builder.Build();
@@ -14,8 +14,16 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseExceptionHandler();
+app.UseMiddleware<ErrorHandlingMiddleware>();
+app.UseMiddleware<TokenAuthenticationMiddleware>();
+app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseHttpsRedirection();
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapGet("/api/debug/throw", (HttpContext _) =>
+        throw new InvalidOperationException("Middleware test exception."));
+}
 
 app.MapGet("/api/users", (UserStore store) =>
     Results.Ok(store.GetAll()))
