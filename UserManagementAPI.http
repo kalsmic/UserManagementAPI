@@ -31,3 +31,31 @@ Content-Type: application/json
 ###
 
 DELETE {{UserManagementAPI_HostAddress}}/api/users/1
+
+###
+
+# Validation: expected 400 Bad Request
+POST {{UserManagementAPI_HostAddress}}/api/users
+Content-Type: application/json
+
+{
+  "name": " ",
+  "email": "not-an-email"
+}
+
+###
+
+# Missing user: expected 404 Not Found
+GET {{UserManagementAPI_HostAddress}}/api/users/999999
+Accept: application/json
+
+###
+
+# Duplicate email: expected 409 Conflict after creating the first user
+POST {{UserManagementAPI_HostAddress}}/api/users
+Content-Type: application/json
+
+{
+  "name": "Duplicate User",
+  "email": "ada.lovelace@techhive.example"
+}
