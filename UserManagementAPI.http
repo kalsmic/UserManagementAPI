@@ -1,0 +1,33 @@
+@UserManagementAPI_HostAddress = https://localhost:5171
+
+GET {{UserManagementAPI_HostAddress}}/api/users
+Accept: application/json
+
+###
+
+POST {{UserManagementAPI_HostAddress}}/api/users
+Content-Type: application/json
+
+{
+  "name": "Ada Lovelace",
+  "email": "ada.lovelace@techhive.example"
+}
+
+###
+
+GET {{UserManagementAPI_HostAddress}}/api/users/1
+Accept: application/json
+
+###
+
+PUT {{UserManagementAPI_HostAddress}}/api/users/1
+Content-Type: application/json
+
+{
+  "name": "Ada Byron Lovelace",
+  "email": "ada.lovelace@techhive.example"
+}
+
+###
+
+DELETE {{UserManagementAPI_HostAddress}}/api/users/1
